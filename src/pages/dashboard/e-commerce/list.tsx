@@ -48,10 +48,10 @@ import { ProductTableRow, ProductTableToolbar } from '../../../sections/@dashboa
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', align: 'left' },
-  { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
-  { id: 'price', label: 'Price', align: 'right' },
+  { id: 'name', label: 'نام', align: 'left' },
+  { id: 'createdAt', label: 'تاریخ ایجاد', align: 'left' },
+  { id: 'inventoryType', label: 'وضعیت', align: 'center', width: 180 },
+  { id: 'price', label: 'قیمت', align: 'right' },
   { id: '' },
 ];
 
@@ -203,14 +203,14 @@ export default function EcommerceProductListPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Product List"
+          heading="لیست کالا"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'داشبورد', href: PATH_DASHBOARD.root },
             {
-              name: 'E-Commerce',
+              name: 'کالا',
               href: PATH_DASHBOARD.eCommerce.root,
             },
-            { name: 'List' },
+            { name: 'لیست' },
           ]}
           action={
             <Button
@@ -219,7 +219,7 @@ export default function EcommerceProductListPage() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Product
+              ثبت جدید
             </Button>
           }
         />

@@ -1,67 +1,27 @@
+import { useEffect } from 'react';
 // next
-import Head from 'next/head';
-// @mui
-import { Box } from '@mui/material';
-// layouts
-import MainLayout from '../layouts/main';
-// components
-import ScrollProgress from '../components/scroll-progress';
-// sections
-import {
-  HomeHero,
-  HomeMinimal,
-  HomeDarkMode,
-  HomeLookingFor,
-  HomeForDesigner,
-  HomeColorPresets,
-  HomePricingPlans,
-  HomeAdvertisement,
-  HomeCleanInterfaces,
-  HomeHugePackElements,
-} from '../sections/home';
+import { useRouter } from 'next/router';
+// config
+import { PATH_AFTER_LOGIN } from '../config-global';
+// routes
+import { PATH_DASHBOARD } from '../routes/paths';
 
 // ----------------------------------------------------------------------
 
-HomePage.getLayout = (page: React.ReactElement) => <MainLayout> {page} </MainLayout>;
+export default function Index() {
+  const { pathname, replace, prefetch } = useRouter();
 
-// ----------------------------------------------------------------------
+  useEffect(() => {
+    //if (pathname === PATH_DASHBOARD.root) {
+      replace(PATH_AFTER_LOGIN);
+    //}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
-export default function HomePage() {
-  return (
-    <>
-      <Head>
-        <title> The starting point for your next project | Minimal UI</title>
-      </Head>
+  useEffect(() => {
+    prefetch(PATH_AFTER_LOGIN);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-      <ScrollProgress />
-
-      <HomeHero />
-
-      <Box
-        sx={{
-          overflow: 'hidden',
-          position: 'relative',
-          bgcolor: 'background.default',
-        }}
-      >
-        <HomeMinimal />
-
-        <HomeHugePackElements />
-
-        <HomeForDesigner />
-
-        <HomeDarkMode />
-
-        <HomeColorPresets />
-
-        <HomeCleanInterfaces />
-
-        <HomePricingPlans />
-
-        <HomeLookingFor />
-
-        <HomeAdvertisement />
-      </Box>
-    </>
-  );
+  return null;
 }
