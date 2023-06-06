@@ -125,7 +125,6 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
   }, []);
 
   const onChangeDirectionByLang = useCallback((lang: string) => {
-    debugger
     const value = lang === 'ar' || lang === 'fa' ? 'rtl' : 'ltr';
     setThemeDirection(value);
     setCookie('themeDirection', value);

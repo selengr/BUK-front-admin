@@ -101,6 +101,10 @@ export type IUserAccountGeneral = {
   id: string;
   avatarUrl: string;
   name: string;
+  firstname: string;
+  lastname: string;
+  nationalCode: string;
+  uniId: string;
   email: string;
   phoneNumber: string;
   address: string;

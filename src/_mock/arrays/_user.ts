@@ -1,3 +1,4 @@
+import { firstName, lastName } from './../assets/name';
 import _mock from '../_mock';
 import { randomNumberRange, randomInArray } from '../utils';
 
@@ -123,6 +124,10 @@ export const _userList = [...Array(24)].map((_, index) => ({
   id: _mock.id(index),
   avatarUrl: _mock.image.avatar(index),
   name: _mock.name.fullName(index),
+  firstName: _mock.name.fullName(index),
+  lastName: _mock.name.fullName(index),
+  natiopnalCode: _mock.name.fullName(index),
+  uniId: _mock.name.fullName(index),
   email: _mock.email(index),
   phoneNumber: _mock.phoneNumber(index),
   address: '908 Jack Locks',

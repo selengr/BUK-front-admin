@@ -1,5 +1,5 @@
 import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // next
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -63,12 +63,10 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: '' },
+  { id: 'firstname', label: 'نام', align: 'left' },
+  { id: 'lastname', label: 'نام خانوادگی', align: 'left' },
+  { id: 'nationalCode', label: 'کد ملی', align: 'left' },
+  { id: 'uniId', label: 'کد پرسنلی/شماره دانشجویی/کد استادی', align: 'center' },
 ];
 
 // ----------------------------------------------------------------------
@@ -118,6 +116,17 @@ export default function UserListPage() {
     filterRole,
     filterStatus,
   });
+
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/user")
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      setTableData(data)
+    })
+  },[]);
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 

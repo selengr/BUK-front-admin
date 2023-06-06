@@ -36,7 +36,7 @@ export default function UserTableRow({
   onSelectRow,
   onDeleteRow,
 }: Props) {
-  const { name, avatarUrl, company, role, isVerified, status } = row;
+  const { name, avatarUrl, company, role, isVerified, status, firstname, lastname, uniId, nationalCode } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -67,33 +67,25 @@ export default function UserTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            <Avatar alt={firstname} src={avatarUrl} />
 
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {firstname}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{company}</TableCell>
+        <TableCell align="left">{lastname}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {role}
+          {nationalCode}
         </TableCell>
 
         <TableCell align="center">
-          <Iconify
-            icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
-            sx={{
-              width: 20,
-              height: 20,
-              color: 'success.main',
-              ...(!isVerified && { color: 'warning.main' }),
-            }}
-          />
+          {uniId}
         </TableCell>
 
-        <TableCell align="left">
+        {/* <TableCell align="left">
           <Label
             variant="soft"
             color={(status === 'banned' && 'error') || 'success'}
@@ -107,7 +99,7 @@ export default function UserTableRow({
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       <MenuPopover

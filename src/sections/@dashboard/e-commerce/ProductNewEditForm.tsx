@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 // next
 import { useRouter } from 'next/router';
 // form
@@ -73,17 +73,19 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const [imageForUpload, setImageForUpload] = useState([]);
+
   const NewProductSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    images: Yup.array().min(1, 'Images is required'),
-    tags: Yup.array().min(2, 'Must have at least 2 tags'),
-    price: Yup.number().moreThan(0, 'Price should not be $0.00'),
-    description: Yup.string().required('Description is required'),
+    title: Yup.string().required('نام الزامی است'),
+    //images: Yup.array().min(1, 'Images is required'),
+    //tags: Yup.array().min(2, 'Must have at least 2 tags'),
+    price: Yup.number().moreThan(0, 'قیمت نباید $0.00'),
+    //description: Yup.string().required('Description is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
+      title: currentProduct?.title || '',
       description: currentProduct?.description || '',
       images: currentProduct?.images || [],
       code: currentProduct?.code || '',
@@ -94,7 +96,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
       inStock: true,
       taxes: true,
       gender: currentProduct?.gender || GENDER_OPTION[2].value,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -125,13 +127,44 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
+  const toBase64 = (file: any) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
   const onSubmit = async (data: FormValuesProps) => {
+    let imagesForUpload: any = []
+    await Promise.all(data.images.map(async (v, k) => {
+      imagesForUpload.push({
+        "img": await toBase64(v)
+      });
+    }));
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      push(PATH_DASHBOARD.eCommerce.list);
-      console.log('DATA', data);
+      const response = fetch("http://localhost:8080/api/product", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify({
+          "title": data.title,
+          "price": data.price,
+          "images": imagesForUpload
+        }), // body data type must match "Content-Type" header
+      }).then(response => response.json())
+        .then(result => {
+          push(PATH_DASHBOARD.eCommerce.list);
+          console.log('DATA', data);
+          enqueueSnackbar(!isEdit ? 'ثبت با موفقیت انجام شد' : 'ویرایش با موفقیت انجام شد');
+        });
+
     } catch (error) {
       console.error(error);
     }
@@ -167,19 +200,18 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField name="name" label="نام کالا" />
+              <RHFTextField name="title" label="نام کالا" />
 
-              <Stack spacing={1}>
+              {/* <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                   Description
                 </Typography>
 
-                <RHFEditor simple name="description" />
-              </Stack>
+              </Stack> */}
 
               <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Images
+                  تصاویر
                 </Typography>
 
                 <RHFUpload
@@ -243,7 +275,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
               <Stack spacing={3} mb={2}>
                 <RHFTextField
                   name="price"
-                  label="Regular Price"
+                  label="قیمت"
                   placeholder="0.00"
                   onChange={(event) =>
                     setValue('price', Number(event.target.value), { shouldValidate: true })
@@ -260,31 +292,13 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                     type: 'number',
                   }}
                 />
-
-                <RHFTextField
-                  name="priceSale"
-                  label="Sale Price"
-                  placeholder="0.00"
-                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
-                    type: 'number',
-                  }}
-                />
               </Stack>
 
-              <RHFSwitch name="taxes" label="Price includes taxes" />
+              {/* <RHFSwitch name="taxes" label="Price includes taxes" /> */}
             </Card>
 
             <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-              {!isEdit ? 'Create Product' : 'Save Changes'}
+              {!isEdit ? 'ثبت کالا' : 'ویرایش کالا'}
             </LoadingButton>
           </Stack>
         </Grid>

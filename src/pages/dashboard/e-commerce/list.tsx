@@ -112,7 +112,6 @@ export default function EcommerceProductListPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    debugger;
     if (products.length) {
       setTableData(products);
     }

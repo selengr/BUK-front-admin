@@ -10,7 +10,6 @@ import NavList from './NavList';
 // ----------------------------------------------------------------------
 
 function NavSectionHorizontal({ data, sx, ...other }: NavSectionProps) {
-  debugger;
   console.log("sadasdads")
   return (
     <Stack
@@ -39,7 +38,6 @@ type ItemsProps = {
 };
 
 function Items({ items }: ItemsProps) {
-  debugger;
   return (
     <>
       {items.map((list) => (
