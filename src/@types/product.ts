@@ -16,6 +16,7 @@ export type IProduct = {
   cover: string;
   images: string[];
   name: string;
+  title: string;
   price: number;
   code: string;
   sku: string;

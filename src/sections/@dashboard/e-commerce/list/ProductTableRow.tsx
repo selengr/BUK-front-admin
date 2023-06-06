@@ -42,7 +42,7 @@ export default function ProductTableRow({
   onEditRow,
   onViewRow,
 }: Props) {
-  const { name, cover, createdAt, inventoryType, price } = row;
+  const { title, cover, createdAt, inventoryType, price } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -76,7 +76,7 @@ export default function ProductTableRow({
             <Image
               disabledEffect
               visibleByDefault
-              alt={name}
+              alt={title}
               src={cover}
               sx={{ borderRadius: 1.5, width: 48, height: 48 }}
             />
@@ -88,7 +88,7 @@ export default function ProductTableRow({
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {name}
+              {title}
             </Link>
           </Stack>
         </TableCell>

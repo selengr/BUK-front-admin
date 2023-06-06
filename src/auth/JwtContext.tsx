@@ -137,7 +137,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
-    const response = await axios.post('/api/account/login', {
+    const response = await axios.post('/api/oauth/v1/authenticate', {
       email,
       password,
     });

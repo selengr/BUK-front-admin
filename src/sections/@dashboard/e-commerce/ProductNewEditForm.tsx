@@ -167,7 +167,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField name="name" label="Product Name" />
+              <RHFTextField name="name" label="نام کالا" />
 
               <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
@@ -199,7 +199,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
-            <Card sx={{ p: 3 }}>
+            {/* <Card sx={{ p: 3 }}>
               <RHFSwitch name="inStock" label="In stock" />
 
               <Stack spacing={3} mt={2}>
@@ -237,7 +237,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                   ChipProps={{ size: 'small' }}
                 />
               </Stack>
-            </Card>
+            </Card> */}
 
             <Card sx={{ p: 3 }}>
               <Stack spacing={3} mb={2}>
