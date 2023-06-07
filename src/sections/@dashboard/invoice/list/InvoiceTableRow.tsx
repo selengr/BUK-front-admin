@@ -27,7 +27,7 @@ import ConfirmDialog from '../../../../components/confirm-dialog';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IInvoice;
+  row: any;
   selected: boolean;
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
@@ -43,7 +43,7 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const { sent, invoiceNumber, createDate, dueDate, status, invoiceTo, totalPrice } = row;
+  const { sent, id, createAt, dueDate, isDelivered, invoiceTo, total , user } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -74,11 +74,11 @@ export default function InvoiceTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <CustomAvatar name={invoiceTo.name} />
+            <CustomAvatar name={user.firstname} />
 
             <div>
               <Typography variant="subtitle2" noWrap>
-                {invoiceTo.name}
+                {user.firstname + " " +user.lastname}
               </Typography>
 
               <Link
@@ -87,33 +87,33 @@ export default function InvoiceTableRow({
                 onClick={onViewRow}
                 sx={{ color: 'text.disabled', cursor: 'pointer' }}
               >
-                {`INV-${invoiceNumber}`}
+                {`INV-${id}`}
               </Link>
             </div>
           </Stack>
         </TableCell>
 
-        <TableCell align="left">{fDate(createDate)}</TableCell>
+        <TableCell align="left">{fDate(createAt)}</TableCell>
 
-        <TableCell align="left">{fDate(dueDate)}</TableCell>
+        {/* <TableCell align="left">{fDate(dueDate)}</TableCell> */}
 
-        <TableCell align="center">{fCurrency(totalPrice)}</TableCell>
+        <TableCell align="center">{fCurrency(total)}</TableCell>
 
-        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+        {/* <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
           {sent}
-        </TableCell>
+        </TableCell> */}
 
         <TableCell align="left">
           <Label
             variant="soft"
             color={
-              (status === 'paid' && 'success') ||
-              (status === 'unpaid' && 'warning') ||
-              (status === 'overdue' && 'error') ||
+              (isDelivered === true && 'success') ||
+              (isDelivered === false && 'warning') ||
+              (isDelivered === 'overdue' && 'error') ||
               'default'
             }
           >
-            {status}
+            {isDelivered}
           </Label>
         </TableCell>
 

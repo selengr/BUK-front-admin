@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import sumBy from 'lodash/sumBy';
 // next
 import Head from 'next/head';
@@ -63,12 +63,12 @@ const SERVICE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Client', align: 'left' },
-  { id: 'createDate', label: 'Create', align: 'left' },
-  { id: 'dueDate', label: 'Due', align: 'left' },
-  { id: 'price', label: 'Amount', align: 'center', width: 140 },
-  { id: 'sent', label: 'Sent', align: 'center', width: 140 },
-  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'invoiceNumber', label: 'نام', align: 'left' },
+  { id: 'createDate', label: 'تاريخ ثبت', align: 'left' },
+  // { id: 'dueDate', label: 'Due', align: 'left' },
+  { id: 'price', label: 'مبلغ كل', align: 'center', width: 140 },
+  // { id: 'sent', label: 'Sent', align: 'center', width: 140 },
+  { id: 'status', label: 'وضهيت', align: 'left' },
   { id: '' },
 ];
 
@@ -104,7 +104,7 @@ export default function InvoiceListPage() {
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'createDate' });
 
-  const [tableData, setTableData] = useState(_invoices);
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
@@ -127,6 +127,17 @@ export default function InvoiceListPage() {
     filterStartDate,
     filterEndDate,
   });
+  useEffect(() => {
+    fetch("http://localhost:8080/api/invoice")
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      setTableData(data)
+    })
+  },[]); 
+
+  
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -145,24 +156,28 @@ export default function InvoiceListPage() {
     (!dataFiltered.length && !!filterEndDate) ||
     (!dataFiltered.length && !!filterStartDate);
 
-  const getLengthByStatus = (status: string) =>
-    tableData.filter((item) => item.status === status).length;
+  const getLengthByStatus = (status: boolean) =>{
+    debugger;
+    return tableData.filter((item) => item.isDelivered === status).length;
+  }
+    
 
-  const getTotalPriceByStatus = (status: string) =>
+  const getTotalPriceByStatus = (status: boolean) =>
     sumBy(
       tableData.filter((item) => item.status === status),
       'totalPrice'
     );
 
-  const getPercentByStatus = (status: string) =>
+  const getPercentByStatus = (status: boolean) =>
     (getLengthByStatus(status) / tableData.length) * 100;
 
+
   const TABS = [
-    { value: 'all', label: 'All', color: 'info', count: tableData.length },
-    { value: 'paid', label: 'Paid', color: 'success', count: getLengthByStatus('paid') },
-    { value: 'unpaid', label: 'Unpaid', color: 'warning', count: getLengthByStatus('unpaid') },
-    { value: 'overdue', label: 'Overdue', color: 'error', count: getLengthByStatus('overdue') },
-    { value: 'draft', label: 'Draft', color: 'default', count: getLengthByStatus('draft') },
+    { value: 'all', label: 'كل سفارشات', color: 'info', count: tableData.length },
+    { value: 'paid', label: 'تحويل شده', color: 'success', count: getLengthByStatus(true) },
+    { value: 'unpaid', label: 'تحويل نشده', color: 'warning', count: getLengthByStatus(false) },
+    // { value: 'overdue', label: 'Overdue', color: 'error', count: getLengthByStatus('overdue') },
+    // { value: 'draft', label: 'Draft', color: 'default', count: getLengthByStatus('draft') },
   ] as const;
 
   const handleOpenConfirm = () => {
@@ -233,6 +248,7 @@ export default function InvoiceListPage() {
     setFilterStartDate(null);
   };
 
+
   return (
     <>
       <Head>
@@ -241,29 +257,30 @@ export default function InvoiceListPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Invoice List"
+          heading="ليست سغارشات"
           links={[
             {
-              name: 'Dashboard',
+              name: 'داشبورد',
               href: PATH_DASHBOARD.root,
             },
             {
-              name: 'Invoices',
+              name: 'سفارشات',
               href: PATH_DASHBOARD.invoice.root,
             },
             {
-              name: 'List',
+              name: 'ليست',
             },
           ]}
           action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.invoice.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Invoice
-            </Button>
+            <></>
+            // <Button
+            //   component={NextLink}
+            //   href={PATH_DASHBOARD.invoice.new}
+            //   variant="contained"
+            //   startIcon={<Iconify icon="eva:plus-fill" />}
+            // >
+            //   New Invoice
+            // </Button>
           }
         />
 
@@ -275,7 +292,7 @@ export default function InvoiceListPage() {
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
-                title="Total"
+                title="كل سفارشات"
                 total={tableData.length}
                 percent={100}
                 price={sumBy(tableData, 'totalPrice')}
@@ -284,24 +301,24 @@ export default function InvoiceListPage() {
               />
 
               <InvoiceAnalytic
-                title="Paid"
-                total={getLengthByStatus('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalPriceByStatus('paid')}
+                title="تحويل شده"
+                total={getLengthByStatus(true)}
+                percent={getPercentByStatus(true)}
+                price={getTotalPriceByStatus(true)}
                 icon="eva:checkmark-circle-2-fill"
                 color={theme.palette.success.main}
               />
 
               <InvoiceAnalytic
-                title="Unpaid"
-                total={getLengthByStatus('unpaid')}
-                percent={getPercentByStatus('unpaid')}
-                price={getTotalPriceByStatus('unpaid')}
+                title="تحويل نشده"
+                total={getLengthByStatus(false)}
+                percent={getPercentByStatus(false)}
+                price={getTotalPriceByStatus(false)}
                 icon="eva:clock-fill"
                 color={theme.palette.warning.main}
               />
 
-              <InvoiceAnalytic
+              {/* <InvoiceAnalytic
                 title="Overdue"
                 total={getLengthByStatus('overdue')}
                 percent={getPercentByStatus('overdue')}
@@ -317,7 +334,7 @@ export default function InvoiceListPage() {
                 price={getTotalPriceByStatus('draft')}
                 icon="eva:file-fill"
                 color={theme.palette.text.secondary}
-              />
+              /> */}
             </Stack>
           </Scrollbar>
         </Card>

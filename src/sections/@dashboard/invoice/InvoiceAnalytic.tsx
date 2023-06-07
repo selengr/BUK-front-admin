@@ -57,7 +57,7 @@ export default function InvoiceAnalytic({ title, total, icon, color, percent, pr
         <Typography variant="subtitle2">
           {fShortenNumber(total)}{' '}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            invoices
+            سفارش
           </Box>
         </Typography>
 

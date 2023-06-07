@@ -216,14 +216,15 @@ export default function UserListPage() {
             { name: 'لیست' },
           ]}
           action={
-            <Button
-              component={NextLink}
-              href={PATH_DASHBOARD.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              ثبت کاربر جدید
-            </Button>
+            <></>
+            // <Button
+            //   component={NextLink}
+            //   href={PATH_DASHBOARD.user.new}
+            //   variant="contained"
+            //   startIcon={<Iconify icon="eva:plus-fill" />}
+            // >
+            //   ثبت کاربر جدید
+            // </Button>
           }
         />
 
