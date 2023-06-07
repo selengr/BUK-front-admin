@@ -32,6 +32,7 @@ type RowProps = {
   category: string;
   price: number;
   status: string;
+  isPayed : boolean;
 };
 
 interface Props extends CardProps {
@@ -123,20 +124,20 @@ function AppNewInvoiceRow({ row }: AppNewInvoiceRowProps) {
       <TableRow>
         <TableCell>{`INV-${row.id}`}</TableCell>
 
-        <TableCell>{row.category}</TableCell>
+        <TableCell>{row.user.firstname+" " +row.user.lastname}</TableCell>
 
-        <TableCell>{fCurrency(row.price)}</TableCell>
+        <TableCell>{fCurrency(row.total)}</TableCell>
 
         <TableCell>
           <Label
             variant="soft"
             color={
-              (row.status === 'in_progress' && 'warning') ||
-              (row.status === 'out_of_date' && 'error') ||
+              (row.isPayed === true && 'warning') ||
+              (row.isPayed === false && 'error') ||
               'success'
             }
           >
-            {sentenceCase(row.status)}
+            {/* {sentenceCase(row.isPayed)} */}
           </Label>
         </TableCell>
 

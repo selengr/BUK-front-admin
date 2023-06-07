@@ -40,11 +40,11 @@ export default function InvoiceDetailsPage() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Invoice Details"
+          heading="مشاهده فاکتور"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'داشبورد', href: PATH_DASHBOARD.root },
             {
-              name: 'Invoices',
+              name: 'سفارشات',
               href: PATH_DASHBOARD.invoice.root,
             },
             { name: `INV-${currentInvoice?.invoiceNumber}` },

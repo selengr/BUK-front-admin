@@ -1,5 +1,6 @@
 // next
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Stack, Button } from '@mui/material';
@@ -46,6 +47,31 @@ export default function GeneralAppPage() {
 
   const { themeStretch } = useSettingsContext();
 
+  const [countData,setCountData] = useState({});
+
+  const [dataTable,setDataTable] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/dashboard/count-all")
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      setCountData(data)
+    })
+  },[]); 
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/dashboard/order")
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      debugger
+      setDataTable(data)
+    })
+  },[]);
+
   return (
     <>
       <Head>
@@ -79,7 +105,7 @@ export default function GeneralAppPage() {
             <AppWidgetSummary
               title="تعداد کاربران"
               percent={2.6}
-              total={18765}
+              total={countData.userCount}
               chart={{
                 colors: [theme.palette.primary.main],
                 series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
@@ -91,7 +117,7 @@ export default function GeneralAppPage() {
             <AppWidgetSummary
               title="تعداد سفارشات"
               percent={0.2}
-              total={4876}
+              total={countData.orderCount}
               chart={{
                 colors: [theme.palette.info.main],
                 series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
@@ -103,7 +129,7 @@ export default function GeneralAppPage() {
             <AppWidgetSummary
               title="تعداد کالاهای فعال"
               percent={-0.1}
-              total={678}
+              total={countData.productCount}
               chart={{
                 colors: [theme.palette.warning.main],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -160,12 +186,12 @@ export default function GeneralAppPage() {
           <Grid item xs={12} lg={12}>
             <AppNewInvoice
               title="آخرین سفارشات"
-              tableData={_appInvoices}
+              tableData={dataTable}
               tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
+                { id: 'id', label: 'شناسه سفارش' },
+                { id: 'category', label: 'کاربر' },
+                { id: 'price', label: 'مبلغ کل' },
+                { id: 'status', label: 'وضعیت' },
                 { id: '' },
               ]}
             />
