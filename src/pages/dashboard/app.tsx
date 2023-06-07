@@ -47,30 +47,30 @@ export default function GeneralAppPage() {
 
   const { themeStretch } = useSettingsContext();
 
-  const [countData,setCountData] = useState({});
+  const [countData, setCountData] = useState({});
 
-  const [dataTable,setDataTable] = useState([]);
+  const [dataTable, setDataTable] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/dashboard/count-all")
-    .then(response => {
-      return response.json()
-    })
-    .then(data => {
-      setCountData(data)
-    })
-  },[]); 
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setCountData(data)
+      })
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/dashboard/order")
-    .then(response => {
-      return response.json()
-    })
-    .then(data => {
-      debugger
-      setDataTable(data)
-    })
-  },[]);
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        debugger
+        setDataTable(data)
+      })
+  }, []);
 
   return (
     <>
@@ -148,10 +148,8 @@ export default function GeneralAppPage() {
                   theme.palette.warning.main,
                 ],
                 series: [
-                  { label: 'در انتظار بررسی', value: 12244 },
-                  { label: 'درحال پردازش', value: 53345 },
-                  { label: 'تحویل شده', value: 44313 },
-                  { label: 'لغو شده', value: 78343 },
+                  { label: 'تحویل شده', value: countData.orderCountDelivered },
+                  { label: 'تحویل نشده', value: countData.orderCountNotDelivered },
                 ],
               }}
             />
